@@ -117,6 +117,11 @@ ORDER BY numberoforders DESC
 
 > Use a LEFT JOIN to join the Orders table onto the Customers table and check for a NULL value in the OrderID column
 
+DELETE FROM customers
+WHERE NOT EXISTS(SELECT NULL
+FROM orders customerid
+WHERE customers.customerid = customerid)
+
 ## Create Database and Table
 
 ### Keep track of the code you write and paste at the end of this document
@@ -132,3 +137,24 @@ ORDER BY numberoforders DESC
   - the `id` should be the primary key for the table.
   - account `name` should be unique.
   - account `budget` is required.
+
+-- Table: public.accounts
+
+DROP TABLE public.accounts;
+
+CREATE TABLE public.accounts
+(
+id integer NOT NULL DEFAULT nextval('accounts_id_seq'::regclass) ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+name character varying[] COLLATE pg_catalog."default" NOT NULL,
+budget numeric NOT NULL,
+CONSTRAINT accounts_pkey PRIMARY KEY (id),
+CONSTRAINT "NameUnq" UNIQUE (name)
+
+)
+WITH (
+OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.accounts
+OWNER to postgres;
